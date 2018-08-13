@@ -6,10 +6,12 @@
 #ifndef UNTITLED_GPB_MSG_PARSER_H
 #define UNTITLED_GPB_MSG_PARSER_H
 
-#include "msg_parser.h"
+//#include "unused/msg_parser.h"
 #include <tuple>
 #include <vector>
 #include <sstream>
+
+typedef long long int64;
 
 namespace google {
     namespace protobuf {
@@ -62,11 +64,11 @@ namespace string_util {
 namespace tdf {
     using reflection_tuple_t = std::tuple<::google::protobuf::Reflection *, ::google::protobuf::Message *, ::google::protobuf::FieldDescriptor *, int>;
 
-    class gpb_msg_parser : public MsgParser {
+    class PbPath {
     public:
-        gpb_msg_parser();
+        PbPath();
 
-        virtual ~gpb_msg_parser();
+        virtual ~PbPath();
 
         virtual int get_value(void *p_msg, const std::string &field_name, int &value);
 
@@ -106,7 +108,7 @@ namespace tdf {
 #ifdef __cplusplus
 extern "C" {
 #endif
-MsgParser *create();
+tdf::PbPath *create();
 #ifdef __cplusplus
 };
 #endif

@@ -2,13 +2,13 @@
 // Created by ubuntu on 8/8/18.
 //
 
-#include "gpb_msg_parser.h"
+#include "PbPath.h"
 #include "google/protobuf/descriptor.h"
 #include "google/protobuf/reflection.h"
 #include <iostream>
 #include <vector>
 
-#include "LOG.h"
+//#include "unused///LOG.h"
 
 namespace string_util {
     std::vector<std::string> split(const std::string &input, char delimeter) {
@@ -58,11 +58,11 @@ namespace tdf {
     using ::google::protobuf::FieldDescriptor;
     using ::google::protobuf::Descriptor;
 
-    gpb_msg_parser::gpb_msg_parser() {}
+    PbPath::PbPath() {}
 
-    gpb_msg_parser::~gpb_msg_parser() {}
+    PbPath::~PbPath() {}
 
-    reflection_tuple_t gpb_msg_parser::get_field_descriptor(void *p_msg, const std::string &field_name) {
+    reflection_tuple_t PbPath::get_field_descriptor(void *p_msg, const std::string &field_name) {
         Message *message{static_cast<Message *>(p_msg)};
         Descriptor *descriptor{const_cast<Descriptor *>(message->GetDescriptor())};
         Reflection *reflection{const_cast<Reflection *>(message->GetReflection())};
@@ -84,22 +84,22 @@ namespace tdf {
                 fieldDescriptor = const_cast<FieldDescriptor *>(descriptor->FindFieldByName(section));
                 if (fieldDescriptor == nullptr) {
                     SHIFT = -2;
-                    LOG_ERROR("wrong item_name, %s[%d]", section.c_str(), shift);
+                    //LOG_ERROR("wrong item_name, %s[%d]", section.c_str(), shift);
                     break;
                 }
                 reflection = const_cast<Reflection *>(message->GetReflection());
-                if (fieldDescriptor->type() == FieldDescriptor::TYPE_MESSAGE && fieldDescriptor->is_repeated()) {
-                    int size = reflection->FieldSize(*message, fieldDescriptor);
-                    if (shift <= size - 1 && size >= 0) {
-                        // sucess
+                int size = reflection->FieldSize(*message, fieldDescriptor);
+                if (shift <= size - 1 && size >= 0) {
+                    // sucess
+                    if (fieldDescriptor->type() == FieldDescriptor::TYPE_MESSAGE && fieldDescriptor->is_repeated()) {
                         message = reflection->MutableRepeatedMessage(message, fieldDescriptor, shift);
                         descriptor = const_cast<Descriptor *>(message->GetDescriptor());
-                    } else {
-                        // out of range
-                        SHIFT = -3;
-                        LOG_ERROR("out of range, %s[%d]", section.c_str(), shift);
-                        break;
                     }
+                } else {
+                    // out of range
+                    SHIFT = -3;
+                    //LOG_ERROR("out of range, %s[%d]", section.c_str(), shift);
+                    break;
                 }
             } else if (shift == -1) {
                 SHIFT = -1;
@@ -107,7 +107,7 @@ namespace tdf {
                 fieldDescriptor = const_cast<FieldDescriptor *>(descriptor->FindFieldByName(section));
                 if (fieldDescriptor == nullptr) {
                     SHIFT = -2;
-                    LOG_ERROR("wrong item_name, %s", section.c_str());
+                    //LOG_ERROR("wrong item_name, %s", section.c_str());
                     break;
                 }
                 reflection = const_cast<Reflection *>(message->GetReflection());
@@ -115,7 +115,7 @@ namespace tdf {
                     message = reflection->MutableMessage(message, fieldDescriptor);
                     if (message == nullptr) {
                         SHIFT = -2;
-                        LOG_ERROR("wrong item_name, %s", section.c_str());
+                        //LOG_ERROR("wrong item_name, %s", section.c_str());
                         break;
                     }
                     descriptor = const_cast<Descriptor *>(message->GetDescriptor());
@@ -123,16 +123,16 @@ namespace tdf {
             } else {
                 // error
                 SHIFT = -4;
-                LOG_ERROR("format error, %s", section.c_str());
+                //LOG_ERROR("format error, %s", section.c_str());
                 break;
             }
         }
         return std::make_tuple(reflection, message, fieldDescriptor, SHIFT);
     }
 
-    int gpb_msg_parser::get_value(void *p_msg, const std::string &field_name, int &value) {
+    int PbPath::get_value(void *p_msg, const std::string &field_name, int &value) {
         if (nullptr == p_msg || nullptr == &field_name || nullptr == &value) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -161,15 +161,15 @@ namespace tdf {
             return RESULT::SUCCESS;
         } else {
             // error, wrong CPPTYPE
-            LOG_ERROR("wrong cpptype");
+            //LOG_ERROR("wrong cpptype");
 //            value = 0;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
 
-    int gpb_msg_parser::get_value(void *p_msg, const std::string &field_name, double &value) {
+    int PbPath::get_value(void *p_msg, const std::string &field_name, double &value) {
         if (nullptr == p_msg || nullptr == &field_name || nullptr == &value) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -198,15 +198,15 @@ namespace tdf {
             return RESULT::SUCCESS;
         } else {
             // error, wrong CPPTYPE
-            LOG_ERROR("wrong cpptype");
+            //LOG_ERROR("wrong cpptype");
 //            value = 0;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
 
-    int gpb_msg_parser::get_value(void *p_msg, const std::string &field_name, bool &value) {
+    int PbPath::get_value(void *p_msg, const std::string &field_name, bool &value) {
         if (nullptr == p_msg || nullptr == &field_name || nullptr == &value) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -235,15 +235,15 @@ namespace tdf {
             return RESULT::SUCCESS;
         } else {
             // error, wrong CPPTYPE
-            LOG_ERROR("wrong cpptype");
+            //LOG_ERROR("wrong cpptype");
             //value = false;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
 
-    int gpb_msg_parser::get_value(void *p_msg, const std::string &field_name, std::string &value) {
+    int PbPath::get_value(void *p_msg, const std::string &field_name, std::string &value) {
         if (nullptr == p_msg || nullptr == &field_name || nullptr == &value) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -286,9 +286,9 @@ namespace tdf {
         }
     }
 
-    int gpb_msg_parser::get_value(void *p_msg, const std::string &field_name, int64 &value) {
+    int PbPath::get_value(void *p_msg, const std::string &field_name, int64 &value) {
         if (nullptr == p_msg || nullptr == &field_name || nullptr == &value) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -317,15 +317,15 @@ namespace tdf {
             return RESULT::SUCCESS;
         } else {
             // error, wrong CPPTYPE
-            LOG_ERROR("wrong cpptype");
+            //LOG_ERROR("wrong cpptype");
 //            value = 0;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
 
-    int gpb_msg_parser::set_value(void *p_msg, const std::string &field_name, int value) {
+    int PbPath::set_value(void *p_msg, const std::string &field_name, int value) {
         if (nullptr == p_msg || nullptr == &field_name) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -357,14 +357,14 @@ namespace tdf {
             return RESULT::SUCCESS;
         } else {
             // error, wrong CPPTYPE
-            LOG_ERROR("wrong cpptype");
+            //LOG_ERROR("wrong cpptype");
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
 
-    int gpb_msg_parser::set_value(void *p_msg, const std::string &field_name, double value) {
+    int PbPath::set_value(void *p_msg, const std::string &field_name, double value) {
         if (nullptr == p_msg || nullptr == &field_name) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -396,14 +396,14 @@ namespace tdf {
             return RESULT::SUCCESS;
         } else {
             // error, wrong CPPTYPE
-            LOG_ERROR("wrong cpptype");
+            //LOG_ERROR("wrong cpptype");
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
 
-    int gpb_msg_parser::set_value(void *p_msg, const std::string &field_name, bool value) {
+    int PbPath::set_value(void *p_msg, const std::string &field_name, bool value) {
         if (nullptr == p_msg || nullptr == &field_name) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -435,14 +435,14 @@ namespace tdf {
             return RESULT::SUCCESS;
         } else {
             // error, wrong CPPTYPE
-            LOG_ERROR("wrong cpptype");
+            //LOG_ERROR("wrong cpptype");
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
 
-    int gpb_msg_parser::set_value(void *p_msg, const std::string &field_name, const std::string &value) {
+    int PbPath::set_value(void *p_msg, const std::string &field_name, const std::string &value) {
         if (nullptr == p_msg || nullptr == &field_name || nullptr == &value) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -478,9 +478,9 @@ namespace tdf {
         }
     }
 
-    int gpb_msg_parser::set_value(void *p_msg, const std::string &field_name, int64 value) {
+    int PbPath::set_value(void *p_msg, const std::string &field_name, int64 value) {
         if (nullptr == p_msg || nullptr == &field_name) {
-            LOG_ERROR("input nullptr");
+            //LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
         }
         reflection_tuple_t reflection_tuple{get_field_descriptor(p_msg, field_name)};
@@ -512,7 +512,7 @@ namespace tdf {
             return RESULT::SUCCESS;
         } else {
             // error, wrong CPPTYPE
-            LOG_ERROR("wrong cpptype");
+            //LOG_ERROR("wrong cpptype");
 //            value = 0;
             return RESULT::WARN_WRONG_CPPTYPE;
         }

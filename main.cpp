@@ -1,6 +1,6 @@
 #include <iostream>
 #include "family.pb.h"
-#include "gpb_msg_parser.h"
+#include "PbPath.h"
 
 int main() {
 
@@ -59,46 +59,46 @@ int main() {
 
     // parser test start here
     std::cout<<"-----------test gpb parser------------"<<std::endl;
-    tdf::gpb_msg_parser parser;
+    tdf::PbPath parser;
 
-//    // basic test
-//    std::string postcode {""};
-//    parser.get_value(static_cast<void*>(family.get()), "identity.postcode", postcode);//error at Identity.postcode
-//    std::cout<<"1.PARSER:"<<postcode<<std::endl;
-//
-//    std::string surname {""};
-//    parser.get_value(static_cast<void*>(family.get()), "surname", surname);
-//    std::cout<<"2.PARSER:"<<surname<<std::endl;
-//
-//
-//    // out-of-range test
-//    std::string house {""};
-//    parser.get_value(static_cast<void*>(family.get()), "identity.house[1]", house);
-//    std::cout<<"3.PARSER:"<<house<<std::endl;
-//
-//
-//    std::string house0 {""};
-//    parser.get_value(static_cast<void*>(family.get()), "identity.house[0]", house0);
-//    std::cout<<"3.PARSER:"<<house0<<std::endl;
-//
-//
-//    std::string house2 {""};
-//    parser.get_value(static_cast<void*>(family.get()), "identity.house[2]", house2);
-//    std::cout<<"3.PARSER:"<<house2<<std::endl;
-//
-//
-//    // nesting-repeated test
-//    std::string email {""};
-//    parser.get_value(static_cast<void*>(family.get()), "person[0].email[1]", email);
-//    std::cout<<"4.PARSER:"<<email<<std::endl;
-//
-//    std::string trader_name {""};
-//    parser.get_value(static_cast<void*>(family.get()), "person[1].trade[1].trade_name", trader_name);
-//    std::cout<<"5.PARSER:"<<trader_name<<std::endl;
-//
-//    std::string goods_name {""};
-//    parser.get_value(static_cast<void*>(family.get()), "person[0].valuable.goods[1].goods_name", goods_name);
-//    std::cout<<"6.PARSER:"<<goods_name<<std::endl;
+    // basic test
+    std::string postcode {""};
+    parser.get_value(static_cast<void*>(family.get()), "identity.postcode", postcode);//error at Identity.postcode
+    std::cout<<"1.PARSER:"<<postcode<<std::endl;
+
+    std::string surname {""};
+    parser.get_value(static_cast<void*>(family.get()), "surname", surname);
+    std::cout<<"2.PARSER:"<<surname<<std::endl;
+
+
+    // out-of-range test
+    std::string house {""};
+    parser.get_value(static_cast<void*>(family.get()), "identity.house[1]", house);
+    std::cout<<"3.PARSER:"<<house<<std::endl;
+
+
+    std::string house0 {""};
+    parser.get_value(static_cast<void*>(family.get()), "identity.house[0]", house0);
+    std::cout<<"3.PARSER:"<<house0<<std::endl;
+
+
+    std::string house2 {""};
+    parser.get_value(static_cast<void*>(family.get()), "identity.house[2]", house2);
+    std::cout<<"3.PARSER:"<<house2<<std::endl;
+
+
+    // nesting-repeated test
+    std::string email {""};
+    parser.get_value(static_cast<void*>(family.get()), "person[0].email[1]", email);
+    std::cout<<"4.PARSER:"<<email<<std::endl;
+
+    std::string trader_name {""};
+    parser.get_value(static_cast<void*>(family.get()), "person[1].trade[1].trade_name", trader_name);
+    std::cout<<"5.PARSER:"<<trader_name<<std::endl;
+
+    std::string goods_name {""};
+    parser.get_value(static_cast<void*>(family.get()), "person[0].valuable.goods[1].goods_name", goods_name);
+    std::cout<<"6.PARSER:"<<goods_name<<std::endl;
 
 
     // error test
@@ -141,12 +141,17 @@ int main() {
     parser.get_value(static_cast<void*>(family.get()), "identity.test1", test1_new);
     std::cout<<"IsSucess="<<retdouble<<",old="<<test1<<",new="<<test1_new<<std::endl;
 
-    int64 test2 {0}, test2_new {0};
+    int64 test2 {0}, test2_new {0}, test2_new_in {123123123};
     int testint64 = parser.get_value(static_cast<void*>(family.get()), "identity.test2", test2);
     std::cout<<"3.bool: return_value="<<is_teenager<<",error_code="<<testint64<<std::endl;
-    int retint64 = parser.set_value(static_cast<void*>(family.get()), "identity.test2", 24);
+    int retint64 = parser.set_value(static_cast<void*>(family.get()), "identity.test2", test2_new_in);
     parser.get_value(static_cast<void*>(family.get()), "identity.test2", test2_new);
     std::cout<<"IsSucess="<<retint64<<",old="<<test2<<",new="<<test2_new<<std::endl;
+
+    std::string new_postcode {"haha"}, new_postcode_get {""};
+    parser.set_value(static_cast<void*>(family.get()), "identity.postcode", new_postcode);//error at Identity.postcode
+    parser.get_value(static_cast<void*>(family.get()), "identity.postcode", new_postcode_get);
+    std::cout<<"1.PARSER:"<<new_postcode_get<<std::endl;
 
 //#endif
     /*
