@@ -6,7 +6,7 @@
 #ifndef UNTITLED_GPB_MSG_PARSER_H
 #define UNTITLED_GPB_MSG_PARSER_H
 
-//#include "unused/msg_parser.h"
+//#include "msg_parser.h"
 #include <tuple>
 #include <vector>
 #include <sstream>
@@ -24,30 +24,7 @@ namespace google {
         class Descriptor;
     }
 }
-/*
-namespace string_util{
-    std::vector<std::string> split(const std::string & input, char delimeter)
-    {
-        std::stringstream ss {input};
-        std::string item;
-        std::vector<std::string> split_strings;
-        while (std::getline(ss, item, delimeter))
-        {
-            split_strings.push_back(item);
-        }
-        return split_strings;
-    }
 
-    std::string trim(const std::string& input)
-    {
-        std::string output{input};
-        if(input.empty()) return output;
-        output.erase(0, output.find_first_not_of(" "));
-        output.erase(output.find_last_not_of(" ")+1);
-        return output;
-    }
-}
- */
 namespace string_util {
     std::vector<std::string> split(const std::string &input, char delimeter);
 
