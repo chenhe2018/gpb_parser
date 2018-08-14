@@ -6,7 +6,6 @@
 #ifndef UNTITLED_GPB_MSG_PARSER_H
 #define UNTITLED_GPB_MSG_PARSER_H
 
-//#include "unused/msg_parser.h"
 #include <tuple>
 #include <vector>
 #include <sstream>
