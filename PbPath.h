@@ -6,7 +6,7 @@
 #ifndef UNTITLED_GPB_MSG_PARSER_H
 #define UNTITLED_GPB_MSG_PARSER_H
 
-//#include "msg_parser.h"
+//#include "unused/msg_parser.h"
 #include <tuple>
 #include <vector>
 #include <sstream>
@@ -24,11 +24,36 @@ namespace google {
         class Descriptor;
     }
 }
+/*
+namespace string_util{
+    std::vector<std::string> split(const std::string & input, char delimeter)
+    {
+        std::stringstream ss {input};
+        std::string item;
+        std::vector<std::string> split_strings;
+        while (std::getline(ss, item, delimeter))
+        {
+            split_strings.push_back(item);
+        }
+        return split_strings;
+    }
 
+    std::string trim(const std::string& input)
+    {
+        std::string output{input};
+        if(input.empty()) return output;
+        output.erase(0, output.find_first_not_of(" "));
+        output.erase(output.find_last_not_of(" ")+1);
+        return output;
+    }
+}
+ */
 namespace string_util {
     std::vector<std::string> split(const std::string &input, char delimeter);
 
     std::string trim(const std::string &input);
+
+    bool symbol_check(char c);
 
     /*
      * ret: 0-n, shift
@@ -66,6 +91,12 @@ namespace tdf {
         virtual int set_value(void *p_msg, const std::string &field_name, const std::string &value);
 
         virtual int set_value(void *p_msg, const std::string &field_name, int64 value);
+
+        /* Func: get size of repeated\unique item
+         * get_size(family.person)          ->3
+         * get_size(family.person[2].id)    ->1
+         */
+        virtual int size(void *p_msg, const std::string &field_name);
 
         enum RESULT {
             SUCCESS = 0,

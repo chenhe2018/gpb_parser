@@ -92,6 +92,11 @@ int main() {
     parser.get_value(static_cast<void*>(family.get()), "person[0].email[1]", email);
     std::cout<<"4.PARSER:"<<email<<std::endl;
 
+    // nesting-repeated test
+    std::string email2 {""};
+    parser.get_value(static_cast<void*>(family.get()), "person[0].email[10]", email2);
+    std::cout<<"4.PARSER:"<<email2<<std::endl;
+
     std::string trader_name {""};
     parser.get_value(static_cast<void*>(family.get()), "person[1].trade[1].trade_name", trader_name);
     std::cout<<"5.PARSER:"<<trader_name<<std::endl;
@@ -152,6 +157,18 @@ int main() {
     parser.set_value(static_cast<void*>(family.get()), "identity.postcode", new_postcode);//error at Identity.postcode
     parser.get_value(static_cast<void*>(family.get()), "identity.postcode", new_postcode_get);
     std::cout<<"1.PARSER:"<<new_postcode_get<<std::endl;
+
+    //
+    int size =0;
+    size = parser.size(family.get(),"identity.id");std::cout<<size<<std::endl;
+    size = parser.size(family.get(),"identity,id");std::cout<<size<<std::endl;
+    size = parser.size(family.get(),"identity.house");std::cout<<size<<std::endl;
+    size = parser.size(family.get(),"person[0].valuable.goods");std::cout<<size<<std::endl;
+    size = parser.size(family.get(),"person[0].valuable.goods[100]");std::cout<<size<<std::endl;
+    size = parser.size(family.get(),"person[0].valuable.goods[0].goods_name");std::cout<<size<<std::endl;
+    size = parser.size(family.get(),"person[0].valuable.goods[0].goods_name[0]");std::cout<<size<<std::endl;
+    size = parser.size(family.get(),"person[0].valuable.goods[0].goods_name[1]");std::cout<<size<<std::endl;
+    size = parser.size(family.get(),"person[0].valuable.goods[0].goods_name[100]");std::cout<<size<<std::endl;
 
 //#endif
     /*

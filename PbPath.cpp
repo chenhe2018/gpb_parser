@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 
-//#include "LOG.h"
+//#include "unused///LOG.h"
 
 namespace string_util {
     std::vector<std::string> split(const std::string &input, char delimeter) {
@@ -29,14 +29,32 @@ namespace string_util {
         return output;
     }
 
+    bool symbol_check(char c) {
+        if (c >= 'a' && c <= 'z')
+            return true;
+        if (c >= 'A' && c <= 'Z')
+            return true;
+        if (c >= '0' && c <= '9')
+            return true;
+        if (c == '.')
+            return true;
+        if (c == '[' || c == ']')
+            return true;
+        return false;
+    }
+
     /*
      * ret: 0-n, shift
      *       -1, no shift
      *       -2, format error
      */
     int format(std::string &expression) {
-        int left = expression.find("[");
-        int right = expression.find("]");
+        for (unsigned int i = 0; i < expression.size(); i++) {
+            if (!symbol_check(expression.at(i)))
+                return -2;
+        }
+        int left = expression.find('[');
+        int right = expression.find(']');
         if (left < 0) {
             return -1;
         } else if (left > 0 && right > 0 && right > left) {
@@ -516,6 +534,76 @@ namespace tdf {
 //            value = 0;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
+    }
+
+    int PbPath::size(void *p_msg, const std::string &field_name) {
+        Message *message{static_cast<Message *>(p_msg)};
+        Descriptor *descriptor{const_cast<Descriptor *>(message->GetDescriptor())};
+        Reflection *reflection{const_cast<Reflection *>(message->GetReflection())};
+        FieldDescriptor *fieldDescriptor{nullptr};
+        std::vector<std::string> path_sections{string_util::split(field_name, '.')};
+        for (unsigned int i = 0; i < path_sections.size() - 1; i++) {
+            std::string section = path_sections[i];
+            int shift = string_util::format(section);
+            if (shift >= 0) {
+                //Repeated
+                // reflection here
+                fieldDescriptor = const_cast<FieldDescriptor *>(descriptor->FindFieldByName(section));
+                if (fieldDescriptor == nullptr) {
+                    //LOG_ERROR("wrong item_name, %s[%d]", section.c_str(), shift);
+                    return RESULT::ERROR_NAME;
+                }
+                reflection = const_cast<Reflection *>(message->GetReflection());
+                int size = reflection->FieldSize(*message, fieldDescriptor);
+                if (shift <= size - 1 && size >= 0) {
+                    // sucess
+                    if (fieldDescriptor->type() == FieldDescriptor::TYPE_MESSAGE && fieldDescriptor->is_repeated()) {
+                        message = reflection->MutableRepeatedMessage(message, fieldDescriptor, shift);
+                        descriptor = const_cast<Descriptor *>(message->GetDescriptor());
+                    }
+                } else {
+                    // out of range
+                    //LOG_ERROR("out of range, %s[%d]", section.c_str(), shift);
+                    return RESULT::ERROR_OUTOFRANGE;
+                }
+            } else if (shift == -1) {
+                //Normal
+                fieldDescriptor = const_cast<FieldDescriptor *>(descriptor->FindFieldByName(section));
+                if (fieldDescriptor == nullptr) {
+                    //LOG_ERROR("wrong item_name, %s", section.c_str());
+                    return RESULT::ERROR_NAME;
+                }
+                reflection = const_cast<Reflection *>(message->GetReflection());
+                if (fieldDescriptor->type() == FieldDescriptor::TYPE_MESSAGE) {
+                    message = reflection->MutableMessage(message, fieldDescriptor);
+                    if (message == nullptr) {
+                        //LOG_ERROR("wrong item_name, %s", section.c_str());
+                        return RESULT::ERROR_NAME;
+                    }
+                    descriptor = const_cast<Descriptor *>(message->GetDescriptor());
+                }
+            } else {
+                // error
+                //LOG_ERROR("format error, %s", section.c_str());
+                return RESULT::ERROR_FORMAT;
+            }
+        }
+        // last item
+        std::string section = path_sections[path_sections.size() - 1];
+        int shift = string_util::format(section);
+        fieldDescriptor = const_cast<FieldDescriptor *>(descriptor->FindFieldByName(section));
+        if (fieldDescriptor == nullptr) {
+            //LOG_ERROR("wrong item_name, %s", section.c_str());
+            return RESULT::ERROR_NAME;
+        }
+        reflection = const_cast<Reflection *>(message->GetReflection());
+        if (shift >= 0) {
+            // last item format error
+            // we think the last item cannot have [], e.g., person[0].valuable.goods[100]
+            //LOG_INFO("last item format error, %s",section.c_str());
+            return RESULT::ERROR_FORMAT;
+        }
+        return fieldDescriptor->is_repeated() ? reflection->FieldSize(*message, fieldDescriptor) : 1;
     }
 
 
