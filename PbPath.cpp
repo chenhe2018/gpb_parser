@@ -1,14 +1,10 @@
-//
-// Created by ubuntu on 8/8/18.
-//
-
 #include "PbPath.h"
 #include "google/protobuf/descriptor.h"
 #include "google/protobuf/reflection.h"
 #include <iostream>
 #include <vector>
 
-//#include "unused///LOG.h"
+//#include "LOG.h"
 
 namespace string_util {
     std::vector<std::string> split(const std::string &input, char delimeter) {

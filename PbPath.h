@@ -3,8 +3,8 @@
 //
 #pragma once
 
-#ifndef UNTITLED_GPB_MSG_PARSER_H
-#define UNTITLED_GPB_MSG_PARSER_H
+#ifndef GPB_MSG_PARSER_H
+#define GPB_MSG_PARSER_H
 
 #include <tuple>
 #include <vector>
@@ -121,4 +121,4 @@ tdf::PbPath *create();
 #endif
 
 
-#endif //UNTITLED_GPB_MSG_PARSER_H
+#endif //GPB_MSG_PARSER_H
