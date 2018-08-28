@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include <time.h>
-#include <unistd.h>
 
 #include "../src/PbPath.h"
 
@@ -71,6 +70,13 @@ using namespace std;
     c;                                                                                              \
 }   \
 
+/**
+ * us
+ * (1).time_t time(time_t *timer);
+ * 返回以格林尼治时间（GMT）为标准，从1970年1月1日00:00:00到现在的此时此刻所经过的秒数
+ * (2).clock_t clock(void);
+ * 返回进程启动到调用函数时所经过的CPU时钟计时单元（clock tick）数，在MSDN中称之为挂钟时间（wal-clock），以毫秒为单位
+ */
 #define GetTickCount()  \
 ({  \
     unsigned long ret;                              \
@@ -80,30 +86,37 @@ using namespace std;
     ret;                                            \
 })  \
 
-int main() {
-
-    std::shared_ptr<Test::base> base = std::make_shared<Test::base>();
-
-    unsigned long start_time = GetTickCount();
-    cout << "start_time:" << start_time << endl;
-
-    Test::A *a = base->add_b11();
-    GenA(a);
-    Test::C *c = base->add_b12();
-    GenC(c);
-
+//#include <unistd.h>
 //    sleep(1);
 //    usleep(1000);
 
-    unsigned long end_time = GetTickCount();
-    cout << "end_time:" << end_time << endl;
-    unsigned long subtime = end_time - start_time;
+int main() {
+
+    std::shared_ptr<Test::base> base = std::make_shared<Test::base>();
+    unsigned long start_time, end_time, subtime;
+
+    // do
+    start_time = GetTickCount();
+
+    Test::A *a = base->add_b11();
+    GenA(a);
+    for(int i=0;i<100;i++){
+        Test::A *ai = base->add_b11();
+        GenA(ai);
+    }
+//    Test::C *c = base->add_b12();
+//    GenC(c);
+
+    end_time = GetTickCount();
+    cout << "time cost:" << end_time - start_time << endl;
 
     // print
+    start_time = GetTickCount();
     std::string encode_str;
     base->SerializeToString(&encode_str);
-    std::cout << encode_str << std::endl;
+    //std::cout << encode_str << std::endl;
+    end_time = GetTickCount();
+    cout << "time cost:" << end_time - start_time << endl;
 
-    cout << "time cost:" << subtime << endl;
     return 0;
 }
