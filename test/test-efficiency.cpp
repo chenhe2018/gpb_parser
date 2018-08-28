@@ -4,6 +4,11 @@
 
 #include <iostream>
 
+#include <time.h>
+#include <unistd.h>
+
+#include "../src/PbPath.h"
+
 #include "../message/testmsg.pb.h"
 
 using namespace std;
@@ -22,7 +27,7 @@ using namespace std;
     a->set_a9(3.1415926);
     a->add_a10(1.0);a->add_a10(2.0);a->add_a10(3.0);
 */
-#define GenA(a){   \
+#define GenA(a){    \
     a->set_a1("a1");                                        \
     a->add_a2("a2_0");a->add_a2("a2_1");                    \
     a->set_a3(1);                                           \
@@ -35,7 +40,7 @@ using namespace std;
     a->set_a9(3.1415926);                                   \
     a->add_a10(1.0);a->add_a10(2.0);a->add_a10(3.0);        \
     a;                                                      \
-}
+}   \
 
 /*
     Test::C * c = base->add_b12();
@@ -64,22 +69,41 @@ using namespace std;
     c->set_cccccccccccccc9(2.71828);                                                                \
     c->add_cccccccccccccc10(-1.0);c->add_cccccccccccccc10(-2.0);c->add_cccccccccccccc10(-3.0);      \
     c;                                                                                              \
-}
+}   \
+
+#define GetTickCount()  \
+({  \
+    unsigned long ret;                              \
+    struct timespec ts;                             \
+    clock_gettime(CLOCK_MONOTONIC, &ts);            \
+    ret = ts.tv_sec * 1000 + ts.tv_nsec/(1000*1000);\
+    ret;                                            \
+})  \
 
 int main() {
 
     std::shared_ptr<Test::base> base = std::make_shared<Test::base>();
 
-    Test::A * a = base->add_b11();
+    unsigned long start_time = GetTickCount();
+    cout << "start_time:" << start_time << endl;
+
+    Test::A *a = base->add_b11();
     GenA(a);
-    Test::C * c = base->add_b12();
+    Test::C *c = base->add_b12();
     GenC(c);
+
+//    sleep(1);
+//    usleep(1000);
+
+    unsigned long end_time = GetTickCount();
+    cout << "end_time:" << end_time << endl;
+    unsigned long subtime = end_time - start_time;
 
     // print
     std::string encode_str;
     base->SerializeToString(&encode_str);
-    std::cout<<encode_str<<std::endl;
+    std::cout << encode_str << std::endl;
 
-    cout << "hello" << endl;
+    cout << "time cost:" << subtime << endl;
     return 0;
 }
