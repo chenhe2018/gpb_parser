@@ -1,6 +1,6 @@
 #include <iostream>
 #include "../message/family.pb.h"
-#include "PbPath.h"
+#include "../src/PbPath.h"
 
 int main() {
 
