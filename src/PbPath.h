@@ -3,9 +3,10 @@
 //
 #pragma once
 
-#ifndef GPB_MSG_PARSER_H
-#define GPB_MSG_PARSER_H
+#ifndef UNTITLED_GPB_MSG_PARSER_H
+#define UNTITLED_GPB_MSG_PARSER_H
 
+//#include "unused/msg_parser.h"
 #include <tuple>
 #include <vector>
 #include <sstream>
@@ -104,7 +105,8 @@ namespace tdf {
             ERROR_OUTOFRANGE = -3,
             WARN_SYSTEMERROR = -4,
             WARN_WRONG_CPPTYPE = -5,
-            ERROR_NULL_POINT = -6
+            ERROR_NULL_POINT = -6,
+            ERROR_STOI = -7
         };
 
     private:
@@ -121,4 +123,4 @@ tdf::PbPath *create();
 #endif
 
 
-#endif //GPB_MSG_PARSER_H
+#endif //UNTITLED_GPB_MSG_PARSER_H

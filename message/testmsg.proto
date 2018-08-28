@@ -1,0 +1,43 @@
+syntax = "proto2";
+package Test;
+
+message A{
+    required string a1=1;
+    repeated string a2=2;
+    required int32 a3=3;
+    repeated int32 a4=4;
+    required int64 a5=5;
+    repeated int64 a6=6;
+    required bool a7=7;
+    repeated bool a8=8;
+    required double a9=9;
+    repeated double a10=10;
+}
+
+message C{
+    required string cccccccccccccc1=1;
+    repeated string cccccccccccccc2=2;
+    required int32 cccccccccccccc3=3;
+    repeated int32 cccccccccccccc4=4;
+    required int64 cccccccccccccc5=5;
+    repeated int64 cccccccccccccc6=6;
+    required bool cccccccccccccc7=7;
+    repeated bool cccccccccccccc8=8;
+    required double cccccccccccccc9=9;
+    repeated double cccccccccccccc10=10;
+}
+
+message base{
+    required string c1=1;
+    repeated string c2=2;
+    required int32 c3=3;
+    repeated int32 c4=4;
+    required int64 c5=5;
+    repeated int64 c6=6;
+    required bool c7=7;
+    repeated bool c8=8;
+    required double c9=9;
+    repeated double c10=10;
+    repeated A b11=11;
+    repeated C b12=12;
+}

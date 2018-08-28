@@ -1,5 +1,5 @@
 #include <iostream>
-#include "family.pb.h"
+#include "../message/family.pb.h"
 #include "PbPath.h"
 
 int main() {
@@ -73,12 +73,12 @@ int main() {
 
     // out-of-range test
     std::string house {""};
-    parser.get_value(static_cast<void*>(family.get()), "identity.house[1]", house);
+    parser.get_value(static_cast<void*>(family.get()), "identity,house[1]", house);
     std::cout<<"3.PARSER:"<<house<<std::endl;
 
 
     std::string house0 {""};
-    parser.get_value(static_cast<void*>(family.get()), "identity.house[0]", house0);
+    parser.get_value(static_cast<void*>(family.get()), "identity.house[r]", house0);
     std::cout<<"3.PARSER:"<<house0<<std::endl;
 
 
@@ -102,7 +102,7 @@ int main() {
     std::cout<<"5.PARSER:"<<trader_name<<std::endl;
 
     std::string goods_name {""};
-    parser.get_value(static_cast<void*>(family.get()), "person[0].valuable.goods[1].goods_name", goods_name);
+    parser.get_value(static_cast<void*>(family.get()), "person[0),valuable,goods(1].goods_name", goods_name);
     std::cout<<"6.PARSER:"<<goods_name<<std::endl;
 
 

@@ -7,3 +7,5 @@ Makefile
 pbpath
 .idea/
 protobuf/
+*.cbp
+bin/
