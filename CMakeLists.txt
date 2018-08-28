@@ -14,10 +14,31 @@ execute_process(
 include_directories(${CMAKE_SOURCE_DIR}/protobuf/include)
 link_directories(${CMAKE_SOURCE_DIR}/protobuf/lib)
 
-set(_TARGETNAME pbpath)
+set(_TARGETNAME PbPath)
 set(_SRCS src/PbPath.cpp)
 add_library(${_TARGETNAME} SHARED ${_SRCS})
 target_link_libraries(${_TARGETNAME} -lprotobuf)
 
 #add_executable(main main.cpp family.pb.cc PbPath.cpp)
 #target_link_libraries(main -lprotobuf)
+
+# CPack
+include(InstallRequiredSystemLibraries)
+set(CPACK_PACKAGE_DIRECTORY "${PROJECT_SOURCE_DIR}/pack")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "a")
+set(PROJECT_VERSION_FULL ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
+set(CPACK_SOURCE_IGNORE_FILES
+        ${PROJECT_SOURCE_DIR}/build
+        ${PROJECT_SOURCE_DIR}/cmake-build-debug
+        ${PROJECT_SOURCE_DIR}/CMakeCache.txt
+        ${PROJECT_SOURCE_DIR}/.git
+        ${PROJECT_SOURCE_DIR}/.idea
+        ${PROJECT_SOURCE_DIR}/pack
+        )
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME PbPath-${PROJECT_VERSION_FULL})
+
+include(CPack)
