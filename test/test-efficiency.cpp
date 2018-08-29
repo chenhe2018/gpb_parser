@@ -12,7 +12,9 @@
 
 using namespace std;
 
-/*
+/**
+  * Test::A *a = base->add_b11();
+  * GenA(a);
     Test::A * a = base->add_b11();
     a->set_a1("a1");
     a->add_a2("a2_0");a->add_a2("a2_1");
@@ -41,7 +43,9 @@ using namespace std;
     a;                                                      \
 }   \
 
-/*
+/**
+  * Test::C *c = base->add_b12();
+  * GenC(c);
     Test::C * c = base->add_b12();
     c->set_cccccccccccccc1("c1");
     c->add_cccccccccccccc2("c2_0");c->add_cccccccccccccc2("c2_1");
@@ -90,31 +94,65 @@ using namespace std;
 //    sleep(1);
 //    usleep(1000);
 
+#define SERIALIZE(x)    \
+({  \
+    string encode_str;                  \
+    x->SerializeToString(&encode_str);  \
+    encode_str;                         \
+})  \
+
 int main() {
 
     std::shared_ptr<Test::base> base = std::make_shared<Test::base>();
     unsigned long start_time, end_time, subtime;
+    tdf::PbPath parser;
 
-    // do
+    // do init
     start_time = GetTickCount();
-
-    Test::A *a = base->add_b11();
-    GenA(a);
-    for(int i=0;i<100;i++){
+    int64 i64{64}, i64_2{642};
+    // required items
+    base->set_b1("b1");
+    base->set_b3(3);
+    base->set_b5(i64);
+    base->set_b7(true);
+    base->set_b9(3.14);
+    // repeated items
+    for(int i=0;i<1000;i++){
+        base->add_b2("b2");
+        base->add_b4(4);
+        base->add_b6(i64_2);
+        base->add_b8(false);
+        base->add_b10(2.72);
         Test::A *ai = base->add_b11();
         GenA(ai);
+        Test::C *c = base->add_b12();
+        GenC(c);
     }
-//    Test::C *c = base->add_b12();
-//    GenC(c);
-
+    std::cout << SERIALIZE(base) << std::endl;
     end_time = GetTickCount();
-    cout << "time cost:" << end_time - start_time << endl;
+    cout << "time-cost[init]:" << end_time - start_time << endl;
+
+    // do reflection search
+    string caseA [] = {"b11[50].a1", "b11[50].a2[2]", "b11[50].a3", "b11[50].a4[2]", "b11[50].a5", "b11[50].a6[2]", "b11[50].a7", "b11[50].a8[2]", "b11[50].a9", "b11[50].a10[2]"};
+    string caseC [] = {"b12.cccccccccccccc1", "b12.cccccccccccccc2[2]", "b12.cccccccccccccc3", "b12.cccccccccccccc4[2]", "b12.cccccccccccccc5", "b12.cccccccccccccc6[2]", "b12.cccccccccccccc7", "b12.cccccccccccccc8[2]", "b12.cccccccccccccc9", "b12.cccccccccccccc10[2]"};
+    string caseMsg [] = {""};
+    for (int i = 0; i < caseA->size(); i++) {
+        start_time = GetTickCount();
+        string str{""};
+        parser.get_value(static_cast<void *>(base.get()), caseA[i], str);
+        end_time = GetTickCount();
+        std::cout << "cost:" << end_time - start_time << "\tstr:" << str << std::endl;
+    }
+    // do directory search
+
+
 
     // print
     start_time = GetTickCount();
-    std::string encode_str;
+/*  std::string encode_str;
     base->SerializeToString(&encode_str);
-    //std::cout << encode_str << std::endl;
+    std::cout << encode_str << std::endl;
+    */
     end_time = GetTickCount();
     cout << "time cost:" << end_time - start_time << endl;
 

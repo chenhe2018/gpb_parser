@@ -28,16 +28,16 @@ message C{
 }
 
 message base{
-    required string c1=1;
-    repeated string c2=2;
-    required int32 c3=3;
-    repeated int32 c4=4;
-    required int64 c5=5;
-    repeated int64 c6=6;
-    required bool c7=7;
-    repeated bool c8=8;
-    required double c9=9;
-    repeated double c10=10;
+    required string b1=1;
+    repeated string b2=2;
+    required int32 b3=3;
+    repeated int32 b4=4;
+    required int64 b5=5;
+    repeated int64 b6=6;
+    required bool b7=7;
+    repeated bool b8=8;
+    required double b9=9;
+    repeated double b10=10;
     repeated A b11=11;
     repeated C b12=12;
 }
