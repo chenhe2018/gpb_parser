@@ -114,6 +114,12 @@ namespace tdf {
                     LOG_ERROR("wrong item_name, %s[%d]", section.c_str(), shift);
                     break;
                 }
+                if (!fieldDescriptor->is_repeated()) {
+                    // unique items treated as repeated
+                    SHIFT = -3;
+                    LOG_ERROR("unique items treated as repeated, %s[%d]", section.c_str(), shift);
+                    break;
+                }
                 reflection = const_cast<Reflection *>(message->GetReflection());
                 int size = reflection->FieldSize(*message, fieldDescriptor);
                 if (shift <= size - 1 && size >= 0) {
@@ -137,7 +143,14 @@ namespace tdf {
                     LOG_ERROR("wrong item_name, %s", section.c_str());
                     break;
                 }
+                if (fieldDescriptor->is_repeated()) {
+                    // repeated items treated as unique
+                    SHIFT = -3;
+                    LOG_ERROR("repeated items treated as unique, %s[%d]", section.c_str(), shift);
+                    break;
+                }
                 reflection = const_cast<Reflection *>(message->GetReflection());
+                // sucess
                 if (fieldDescriptor->type() == FieldDescriptor::TYPE_MESSAGE) {
                     message = reflection->MutableMessage(message, fieldDescriptor);
                     if (message == nullptr) {

@@ -1,6 +1,3 @@
-//
-// Created by ubuntu on 8/8/18.
-//
 #pragma once
 
 #ifndef UNTITLED_GPB_MSG_PARSER_H
@@ -10,8 +7,12 @@
 #include <tuple>
 #include <vector>
 #include <sstream>
+#include <google/protobuf/stubs/port.h>
 
 typedef long long int64;
+
+//typedef ::google::protobuf::int32 int32;
+//typedef ::google::protobuf::int64 int64;
 
 namespace google {
     namespace protobuf {
