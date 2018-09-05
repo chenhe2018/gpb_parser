@@ -15,4 +15,4 @@ cmake .. && make && cd ..
 g++ -o ./bin/bash_main ./test/main.cpp ./message/family.pb.cc -std=c++11 -Wall -g -I`pwd`/protobuf/include -L`pwd`/protobuf/lib -lprotobuf -I`pwd`/bin -L`pwd`/bin -lPbPath
 
 # test-efficiency
-g++ -o ./bin/bash_t ./test/test-efficiency.cpp ./message/testmsg.pb.cc -Wall -std=c++11 -I./protobuf/include -L./protobuf/lib -lprotobuf -I`pwd`/bin -L`pwd`/bin -lPbPath
+g++ -o ./bin/bash_test-efficiency ./test/test-efficiency.cpp ./message/testmsg.pb.cc -Wall -std=c++11 -I./protobuf/include -L./protobuf/lib -lprotobuf -I`pwd`/bin -L`pwd`/bin -lPbPath

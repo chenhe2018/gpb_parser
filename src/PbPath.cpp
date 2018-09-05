@@ -1,7 +1,3 @@
-//
-// Created by ubuntu on 8/8/18.
-//
-
 #include "PbPath.h"
 #include "google/protobuf/descriptor.h"
 #include "google/protobuf/reflection.h"
@@ -657,6 +653,4 @@ namespace tdf {
         }
         return fieldDescriptor->is_repeated() ? reflection->FieldSize(*message, fieldDescriptor) : 1;
     }
-
-
 }
