@@ -444,12 +444,12 @@ int main() {
     
     // tmp test
     std::cout<<"**** reflect ****"<<std::endl;
-    my_tmp_test_reflect(parser,base.get(),caseBase);
+    my_tmp_test_reflect(parser,base.get(),caseBase,100000);
     my_tmp_test_reflect(parser,base.get(),caseA,100000);
     my_tmp_test_reflect(parser,base.get(),caseC,100000);
 
     std::cout<<"**** direct ****"<<std::endl;
-    my_tmp_test_direct(base.get(),100000);
+    my_tmp_test_direct(base.get(),100000*100);
 /*
     // print
     start_time = GetTickCount();
