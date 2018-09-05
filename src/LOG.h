@@ -23,7 +23,7 @@
 
 // 错误日志信息
 #define LOG_ERROR(format, ...)                                                             \
-{                                                                                          \
+({                                                                                         \
     time_t t = time(0);                                                                    \
     struct tm ptm;                                                                         \
     memset(&ptm, 0, sizeof(ptm));                                                          \
@@ -31,7 +31,7 @@
     fprintf(stderr, "[ ERROR ] [%4d-%02d-%02d %02d:%02d:%02d] [ %s:%s:%d ] " format "\n",  \
             ptm.tm_year + 1900, ptm.tm_mon + 1, ptm.tm_mday, ptm.tm_hour,                  \
             ptm.tm_min, ptm.tm_sec, __FILE__, __FUNCTION__ , __LINE__, ##__VA_ARGS__);     \
-}
+})
 
 #else
 #define LOG_INFO(format, ...)
