@@ -6,6 +6,7 @@
 #include <time.h>
 
 // -D DEBUG, active
+// add_definitions(-D DEBUG)
 #ifdef DEBUG
 
 // 调试日志信息
