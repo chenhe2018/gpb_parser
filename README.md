@@ -43,3 +43,40 @@ CPack after cmake.
 
 >cpack --config CPackConfig.cmake
 
+### 4.macro triger
+
+``` C++
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug")
+    add_definitions(-D DEBUG)
+endif()
+```
+
+1)build.sh or build_release.sh
+
+>cmake ..
+
+>cmake -DCMAKE_BUILD_TYPE=Release ..
+
+2)'-D DEBUG' controls LOG.h
+
+```C++
+#ifdef DEBUG
+#define LOG_INFO(format, ...)                                                              \
+({                                                                                         \
+    time_t t = time(0);                                                                    \
+    struct tm ptm;                                                                         \
+    memset(&ptm, 0, sizeof(ptm));                                                          \
+    localtime_r(&t, &ptm);                                                                 \
+    fprintf(stdout, "[ INFO ] [%4d-%02d-%02d %02d:%02d:%02d] [ %s:%s:%d ] " format "\n",   \
+            ptm.tm_year + 1900, ptm.tm_mon + 1, ptm.tm_mday, ptm.tm_hour,                  \
+            ptm.tm_min, ptm.tm_sec, __FILE__, __FUNCTION__ , __LINE__, ##__VA_ARGS__);     \
+})
+#else
+#define LOG_INFO(format, ...)
+#endif
+```
+ 
+
+
+
