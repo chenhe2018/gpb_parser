@@ -6,7 +6,11 @@ set(CMAKE_CXX_FLAGS "-Wall -g -std=c++11")
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
-add_definitions(-D DEBUG)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug")
+    add_definitions(-D DEBUG)
+endif()
+
 
 execute_process(
 #        COMMAND sh ${CMAKE_SOURCE_DIR}/start-protoc.sh
