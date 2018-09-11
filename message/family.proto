@@ -15,9 +15,11 @@ message Identity
     required int32 id = 1;
     optional string postcode = 2;
     repeated string house = 3;
-    optional bool is_teenager = 4;
-    optional double test1 = 5;
-    optional int64 test2 = 6;
+    optional int32 test_int32 = 4;
+    optional int64 test_int64 = 5;
+    optional bool test_bool = 6;
+    optional double test_double = 7;
+    optional string test_string = 8;
 }
 
 // 1.2

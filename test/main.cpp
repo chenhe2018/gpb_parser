@@ -11,10 +11,14 @@ int main() {
     identity->set_postcode("201203");
     identity->add_house("Room 201.");
     identity->add_house("NO.3363.");
-    identity->set_is_teenager(true);
-    identity->set_test1(3.1415926);
+
+
     ::google::protobuf::int64 i64 {64};
-    identity->set_test2(i64);
+    identity->set_test_int32(32);
+    identity->set_test_int64(i64);
+    identity->set_test_bool(true);
+    identity->set_test_double(3.14);
+    identity->set_test_string("test_string");
 
 
     Test::Person* person1 = family->add_person();
@@ -60,6 +64,15 @@ int main() {
     // parser test start here
     std::cout<<"-----------test gpb parser------------"<<std::endl;
     tdf::PbPath parser;
+    int ret =0;
+
+    std::string ssss1 {""};
+    ret = parser.get_value(static_cast<void*>(family.get()), "identify[1].postcode", ssss1);
+    std::cout<<"unique item as repeated:"<<ssss1<<" "<<ret<<std::endl;
+
+    std::string ssss2 {""};
+    ret = parser.get_value(static_cast<void*>(family.get()), "person.id", ssss2);
+    std::cout<<"repeated item as unique:"<<ssss2<<" "<<ret<<std::endl;
 
     // basic test
     std::string postcode {""};
@@ -131,28 +144,49 @@ int main() {
     int error5 = parser.get_value(static_cast<void*>(family.get()), "person[0].valuable.goods[1].goods_name", *error_goods_name5);//null point input
     std::cout<<"5.Error: return_value="<<error_goods_name5<<",error_code="<<error5<<std::endl;
 
-    // test bool/double/int64
-    bool is_teenager = false, is_teenager_new;
-    int testbool = parser.get_value(static_cast<void*>(family.get()), "identity.is_teenager", is_teenager);
-    std::cout<<"1.bool: return_value="<<is_teenager<<",error_code="<<testbool<<std::endl;
-    int retbool = parser.set_value(static_cast<void*>(family.get()), "identity.is_teenager", false);
-    parser.get_value(static_cast<void*>(family.get()), "identity.is_teenager", is_teenager_new);
-    std::cout<<"IsSucess="<<retbool<<",old="<<is_teenager<<",new="<<is_teenager_new<<std::endl;
+    // test bool/double/string/int32/int64
+    int gret,sret;
 
-    double test1 {0}, test1_new {0};
-    int testdouble = parser.get_value(static_cast<void*>(family.get()), "identity.test1", test1);
-    std::cout<<"2.double: return_value="<<is_teenager<<",error_code="<<testdouble<<std::endl;
-    int retdouble = parser.set_value(static_cast<void*>(family.get()), "identity.test1", 3.14);
-    parser.get_value(static_cast<void*>(family.get()), "identity.test1", test1_new);
-    std::cout<<"IsSucess="<<retdouble<<",old="<<test1<<",new="<<test1_new<<std::endl;
+    bool test_bool = false, test_bool_new, preb = false;
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_bool", test_bool);
+    std::cout<<"=>test_bool: return_value="<<test_bool<<",error_code="<<gret<<std::endl;
+    sret = parser.set_value(static_cast<void*>(family.get()), "identity.test_bool", preb);
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_bool", test_bool_new);
+    std::cout<<"gret="<<gret<<",sret="<<sret<<",old="<<test_bool<<",new="<<test_bool_new<<std::endl;
 
-    int64 test2 {0}, test2_new {0}, test2_new_in {123123123};
-    int testint64 = parser.get_value(static_cast<void*>(family.get()), "identity.test2", test2);
-    std::cout<<"3.bool: return_value="<<is_teenager<<",error_code="<<testint64<<std::endl;
-    int retint64 = parser.set_value(static_cast<void*>(family.get()), "identity.test2", test2_new_in);
-    parser.get_value(static_cast<void*>(family.get()), "identity.test2", test2_new);
-    std::cout<<"IsSucess="<<retint64<<",old="<<test2<<",new="<<test2_new<<std::endl;
 
+    double test_double {0}, test_double_new {0}, pred = 2.718;
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_double", test_double);
+    std::cout<<"=>test_double: return_value="<<test_bool<<",error_code="<<gret<<std::endl;
+    sret = parser.set_value(static_cast<void*>(family.get()), "identity.test_double", pred);
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_double", test_double_new);
+    std::cout<<"gret="<<gret<<",sret="<<sret<<",old="<<test_double<<",new="<<test_double_new<<std::endl;
+
+
+    std::string test_string {"test_string"}, test_string_new, pres {"new_test_string"};
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_string", test_string);
+    std::cout<<"=>test_string: return_value="<<test_string<<",error_code="<<gret<<std::endl;
+    sret = parser.set_value(static_cast<void*>(family.get()), "identity.test_string", pres);
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_string", test_string_new);
+    std::cout<<"gret="<<gret<<",sret="<<sret<<",old="<<test_string<<",new="<<test_string_new<<std::endl;
+
+
+    int32 test_int32 {32}, test_int32_new, prei32 {320};
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_int32", test_int32);
+    std::cout<<"=>test_int32: return_value="<<test_int32<<",error_code="<<gret<<std::endl;
+    sret = parser.set_value(static_cast<void*>(family.get()), "identity.test_int32", prei32);
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_int32", test_int32_new);
+    std::cout<<"gret="<<gret<<",sret="<<sret<<",old="<<test_int32<<",new="<<test_int32_new<<std::endl;
+
+
+    int64 test_int64 {64}, test_int64_new, prei64 {640123456789};
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_int64", test_int64);
+    std::cout<<"test_int64: return_value="<<test_int64<<",error_code="<<gret<<std::endl;
+    sret = parser.set_value(static_cast<void*>(family.get()), "identity.test_int64", prei64);
+    gret = parser.get_value(static_cast<void*>(family.get()), "identity.test_int64", test_int64_new);
+    std::cout<<"gret="<<gret<<",sret="<<sret<<",old="<<test_int64<<",new="<<test_int64_new<<std::endl;
+
+    //
     std::string new_postcode {"haha"}, new_postcode_get {""};
     parser.set_value(static_cast<void*>(family.get()), "identity.postcode", new_postcode);//error at Identity.postcode
     parser.get_value(static_cast<void*>(family.get()), "identity.postcode", new_postcode_get);

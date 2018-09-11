@@ -3,25 +3,21 @@
 #ifndef UNTITLED_GPB_MSG_PARSER_H
 #define UNTITLED_GPB_MSG_PARSER_H
 
-//#include "unused/msg_parser.h"
 #include <tuple>
 #include <vector>
 #include <sstream>
 #include <google/protobuf/stubs/port.h>
 
-typedef long long int64;
+//typedef long long int64;
 
-//typedef ::google::protobuf::int32 int32;
-//typedef ::google::protobuf::int64 int64;
+using ::google::protobuf::int32;
+using ::google::protobuf::int64;
 
 namespace google {
     namespace protobuf {
         class Reflection;
-
         class Message;
-
         class FieldDescriptor;
-
         class Descriptor;
     }
 }
@@ -50,7 +46,7 @@ namespace tdf {
 
         virtual ~PbPath();
 
-        virtual int get_value(void *p_msg, const std::string &field_name, int &value);
+        virtual int get_value(void *p_msg, const std::string &field_name, int32 &value);
 
         virtual int get_value(void *p_msg, const std::string &field_name, double &value);
 
@@ -60,7 +56,7 @@ namespace tdf {
 
         virtual int get_value(void *p_msg, const std::string &field_name, int64 &value);
 
-        virtual int set_value(void *p_msg, const std::string &field_name, int value);
+        virtual int set_value(void *p_msg, const std::string &field_name, int32 value);
 
         virtual int set_value(void *p_msg, const std::string &field_name, double value);
 

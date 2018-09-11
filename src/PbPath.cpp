@@ -26,6 +26,7 @@ namespace string_util {
     }
 
     bool symbol_check(char c) {
+#if 0
         if (c >= 'a' && c <= 'z')
             return true;
         if (c >= 'A' && c <= 'Z')
@@ -38,6 +39,7 @@ namespace string_util {
             return true;
         if (c == '[' || c == ']')
             return true;
+#endif
         return false;
     }
 
@@ -48,10 +50,12 @@ namespace string_util {
      *       -3, stoi error
      */
     int format(std::string &expression) {
-//        for (unsigned int i = 0; i < expression.size(); i++) {
-//            if (!symbol_check(expression.at(i)))
-//                return -2;
-//        }
+#if 0
+        for (unsigned int i = 0; i < expression.size(); i++) {
+            if (!symbol_check(expression.at(i)))
+                return -2;
+        }
+#endif
         int left = expression.find('[');
         int right = expression.find(']');
         if (left < 0) {
@@ -176,7 +180,7 @@ namespace tdf {
         return std::make_tuple(reflection, message, fieldDescriptor, SHIFT);
     }
 
-    int PbPath::get_value(void *p_msg, const std::string &field_name, int &value) {
+    int PbPath::get_value(void *p_msg, const std::string &field_name, int32 &value) {
         if (nullptr == p_msg || nullptr == &field_name || nullptr == &value) {
             LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
@@ -210,7 +214,6 @@ namespace tdf {
         } else {
             // error, wrong CPPTYPE
             LOG_ERROR("wrong cpptype");
-//            value = 0;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
@@ -249,7 +252,6 @@ namespace tdf {
         } else {
             // error, wrong CPPTYPE
             LOG_ERROR("wrong cpptype");
-//            value = 0;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
@@ -288,7 +290,6 @@ namespace tdf {
         } else {
             // error, wrong CPPTYPE
             LOG_ERROR("wrong cpptype");
-            //value = false;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
@@ -311,13 +312,10 @@ namespace tdf {
          */
         switch (shift) {
             case -2:
-//                value = "";
                 return RESULT::ERROR_NAME;
             case -3:
-//                value = "";
                 return RESULT::ERROR_OUTOFRANGE;
             case -4:
-//                value = "";
                 return RESULT::ERROR_FORMAT;
             case -5:
                 return RESULT::ERROR_STOI;
@@ -335,7 +333,6 @@ namespace tdf {
             return RESULT::SUCCESS;
         } else {
             // error, wrong CPPTYPE
-//            value = "";
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
@@ -374,12 +371,11 @@ namespace tdf {
         } else {
             // error, wrong CPPTYPE
             LOG_ERROR("wrong cpptype");
-//            value = 0;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
 
-    int PbPath::set_value(void *p_msg, const std::string &field_name, int value) {
+    int PbPath::set_value(void *p_msg, const std::string &field_name, int32 value) {
         if (nullptr == p_msg || nullptr == &field_name) {
             LOG_ERROR("input nullptr");
             return RESULT::ERROR_NULL_POINT;
@@ -579,7 +575,6 @@ namespace tdf {
         } else {
             // error, wrong CPPTYPE
             LOG_ERROR("wrong cpptype");
-//            value = 0;
             return RESULT::WARN_WRONG_CPPTYPE;
         }
     }
@@ -638,7 +633,7 @@ namespace tdf {
         }
         // last item
         std::string section = path_sections[path_sections.size() - 1];
-        int shift = string_util::format(section);
+        int shift = string_util::format(section);cd
         fieldDescriptor = const_cast<FieldDescriptor *>(descriptor->FindFieldByName(section));
         if (fieldDescriptor == nullptr) {
             LOG_ERROR("wrong item_name, %s", section.c_str());
